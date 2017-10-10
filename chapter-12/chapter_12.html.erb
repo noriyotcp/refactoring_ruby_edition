@@ -1,0 +1,19 @@
+<!-- Separate Domain from Presentation -->
+<h3>Orders</h3>
+<p><%= link_to 'Add a new Order', new_order_url %></p>
+<table>
+  <tr>
+    <th>Number</th>
+    <th>Customer</th>
+    <th>Amount</th>
+    <th>&nbsp;</th>
+  </tr>
+  <% @orders.each do |order| %>
+    <tr>
+      <td><%= order.number %></td>
+      <td><%= order.customer %></td>
+      <td><%= order.total %></td>
+      <td><%= link_to 'Show', order_url(order) %></td>
+    </tr>
+  <% end %>
+</table>
