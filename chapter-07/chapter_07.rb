@@ -123,24 +123,23 @@ class Person
   end
 end
 
-### using extend Forwardable
-class Person
-  extend Forwardable
-
-  def_delegator :@department, :manager
-
-  attr_accessor :department
-
-  def manager
-    @department.manager
-  end
-end
-
 class Department
   attr_reader :manager
   def initialize(manager)
     @manager = manager
   end
+end
+
+### using extend Forwardable
+class Person
+  extend Forwardable
+  def_delegator :@department, :manager
+
+  attr_accessor :department
+end
+
+class Department
+  # same as above
 end
 
 manager = john.manager

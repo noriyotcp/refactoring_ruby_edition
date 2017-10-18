@@ -201,16 +201,16 @@ end
 
 ## Split Temporary Variable
 ### Example
-  def distance_traveled(time)
-    primary_acc = @primary_force / @mass
-    primary_time = [time, @delay].min
-    result = 0.5 * primary_acc * primary_time * primary_time
-    secondary_time = time - @delay
-    if(secondary_time > 0)
-      primary_vel = primary_acc * @delay
-      secondary_acc = (@prmary_force + @secondary_force) / @mass
-      result += primary_vel * secondary_time + 5 * secondary_acc * secondary_time *
-        secondary_time
+def distance_traveled(time)
+  primary_acc = @primary_force / @mass
+  primary_time = [time, @delay].min
+  result = 0.5 * primary_acc * primary_time * primary_time
+  secondary_time = time - @delay
+  if(secondary_time > 0)
+    primary_vel = primary_acc * @delay
+    secondary_acc = (@prmary_force + @secondary_force) / @mass
+    result += primary_vel * secondary_time + 5 * secondary_acc * secondary_time *
+      secondary_time
   end
   result
 end
@@ -299,7 +299,7 @@ end
 
 def connect
   begin
-    connection = CreditCardServer.connect(...)
+    connection = CreditCardServer.connect("something...")
     # 与えられたブロックに対し、connection を渡して実行
     yield connection
   rescue IOError => e
@@ -454,7 +454,7 @@ end
 
 ## Dynamic Method Definition
 
-def_each :failure, :error do |method_name|
+def_each :failure, :error, :success do |method_name|
   self.state = method_name
 end
 
@@ -465,13 +465,6 @@ class Class
         instance_exec method_name, &block
       end
     end
-  end
-end
-
-### without def_each
-[:failure, :error, :success].each do |method|
-  define_method method do
-    self.state = method
   end
 end
 

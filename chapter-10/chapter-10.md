@@ -224,7 +224,7 @@ def self.create(type)
   when SALESPERSON
     Salesperson.new
   when MANAGER
-   Manager.new
+    Manager.new
   else
     raise ArgumentError, "Incorrect type code value"
   end

@@ -45,12 +45,14 @@ def print_owing
 end
 ```
 
+-----
+
 ```ruby
 # print_banner method に切り出す
 def print_owing
   outstanding = 0.0
 
-  print_banner
+  print_banner # ここ
 
   # calculate outstanding
   @orders.each do |order|
@@ -72,8 +74,6 @@ end
 
 ### Example: Using Local Variables
 
-details を表示する部分を print_details メソッドへと切り出し、outstanding を渡す
-
 ```ruby
 def print_owing
   outstanding = 0.0
@@ -97,6 +97,10 @@ def print_banner
   puts "*************************"
 end
 ```
+
+-----
+
+details を表示する部分を print_details メソッドへと切り出し、outstanding を渡す
 
 ```ruby
 def print_owing
@@ -219,9 +223,12 @@ end
 def calculate_outstanding(initial_value)
   @orders.inject(initial_value) { |result, order| result + order.amount }
 end
+```
 
-# さらに直接 previous_amount * 1.2 を渡す
-# 返ってきた結果をoutstanding に格納して、print_details へと渡す
+さらに直接 `previous_amount * 1.2` を渡す  
+返ってきた結果を`outstanding` に格納して、`print_details` へと渡す
+
+```ruby
 def print_owing(previous_amount)
   print_banner
   outstanding = calculate_outstanding(previous_amount * 1.2)
@@ -548,16 +555,16 @@ end
 ``acc`` という変数を２度使っているが、それぞれ意味が違う
 
 ```ruby
-  def distance_traveled(time)
-    acc = @primary_force / @mass # ここと
-    primary_time = [time, @delay].min
-    result = 0.5 * acc * primary_time * primary_time
-    secondary_time = time - @delay
-    if(secondary_time > 0)
-      primary_vel = acc * @delay
-      acc = (@prmary_force + @secondary_force) / @mass # ここ
-      result += primary_vel * secondary_time + 5 * acc * secondary_time *
-        secondary_time
+def distance_traveled(time)
+  acc = @primary_force / @mass # ここと
+  primary_time = [time, @delay].min
+  result = 0.5 * acc * primary_time * primary_time
+  secondary_time = time - @delay
+  if(secondary_time > 0)
+    primary_vel = acc * @delay
+    acc = (@prmary_force + @secondary_force) / @mass # ここ
+    result += primary_vel * secondary_time + 5 * acc * secondary_time *
+      secondary_time
   end
   result
 end
@@ -566,16 +573,16 @@ end
 ``primary_acc``, ``secondary_acc`` の２つに分ける
 
 ```ruby
-  def distance_traveled(time)
-    primary_acc = @primary_force / @mass
-    primary_time = [time, @delay].min
-    result = 0.5 * primary_acc * primary_time * primary_time
-    secondary_time = time - @delay
-    if(secondary_time > 0)
-      primary_vel = primary_acc * @delay
-      secondary_acc = (@prmary_force + @secondary_force) / @mass
-      result += primary_vel * secondary_time + 5 * secondary_acc * secondary_time *
-        secondary_time
+def distance_traveled(time)
+  primary_acc = @primary_force / @mass
+  primary_time = [time, @delay].min
+  result = 0.5 * primary_acc * primary_time * primary_time
+  secondary_time = time - @delay
+  if(secondary_time > 0)
+    primary_vel = primary_acc * @delay
+    secondary_acc = (@prmary_force + @secondary_force) / @mass
+    result += primary_vel * secondary_time + 5 * secondary_acc * secondary_time *
+      secondary_time
   end
   result
 end
@@ -584,8 +591,7 @@ end
 
 ## Remove Assignments to Parameters
 
-"assigns to a parameter"?
-メソッドにfoo というオブジェクトをパラメータとして渡した時、"assigns to a parameter"は別のオブジェクトを参照するためにfoo を変えることを意味する
+メソッドにfoo というオブジェクトをパラメータとして渡した時、"変数に割り当てる (assigns to a parameter)"とは、別のオブジェクトを参照するためにfoo を変えることを意味する
 
 ```ruby
 def a_method(foo)
@@ -607,6 +613,18 @@ def discount(input_val, quantity, year_to_date)
 end
 ```
 
+-----
+
+```ruby
+def discount(input_val, quantity, year_to_date)
+  result = input_val # input_val をresultへコピー、そちらの値を変えていく
+  result -= 2 if input_val > 50 # if のinput_val は引数として渡された「元々の」input_val
+  result -= 1 if quantity > 100
+  result -= 4 if year_to_date > 10000
+  result
+end
+```
+
 ## Replace Method with Method Object
 
 メソッドが長すぎる場合はオブジェクトにしろ、的な
@@ -620,12 +638,12 @@ instance variable for any invocations of methods on the original object.
 6. Test.
 7. Replace the old method with one that creates the new object and calls compute
 
-1.新しいクラスを作成し、メソッドの後に名前を付けます。
-2.元のメソッド（ソースオブジェクト）を提供していたオブジェクトの属性と、メソッドの各一時変数および各パラメーターの属性を、新しいクラスに与えます。
-3.新しいクラスに、ソースオブジェクトと各パラメータを取るコンストラクタを与えます。
-4.新しいクラスに "compute"という名前のメソッドを与えます。
-5.元のメソッドの本体をcomputeにコピーします。 ソースオブジェクトのインスタンス変数を使用して元のオブジェクト上のメソッドを呼び出します。
-6.テスト。
+1.新しいクラスを作成し、メソッドの後に名前を付けます  
+2.元のメソッド（ソースオブジェクト）を提供していたオブジェクトの属性と、メソッドの各一時変数および各パラメーターの属性を、新しいクラスに与えます  
+3.新しいクラスに、ソースオブジェクトと各パラメータを取るコンストラクタを与えます  
+4.新しいクラスに "compute"という名前のメソッドを与えます  
+5.元のメソッドの本体をcomputeにコピーします   ソースオブジェクトのインスタンス変数を使用して元のオブジェクト上のメソッドを呼び出します  
+6.テスト  
 7.古いメソッドを、新しいオブジェクトを作成し、compute を呼び出すメソッドに置き換えます
 
 ### Example
@@ -661,7 +679,7 @@ class Account
 end
 
 class Gamma
-  # 元のgamma メソッドの属性をこちらへ持ってくる
+  # Accountのほうにあったgamma メソッドの属性をこちらへ持ってくる
   # Account のオブジェクト用の属性 (account)も
   attr_reader :account,
               :input_val,
@@ -728,6 +746,12 @@ end
 
 ## Replace Loop with Collection Closure Method
 
+ループ内で要素のコレクションを処理している場合、ループをコレクションクロージャメソッドに置き換える
+
+ループを関連するコレクションクロージャメソッドに置き換えると、コードをたどりやすくなる
+
+-----
+
 ```ruby
 offices = []
 employees.each { |e| offices << e.office }
@@ -770,6 +794,8 @@ p employees.inject(0) { |sum, e| sum + e.salary }
 
 要はユニークなコードがメソッドの先頭か末尾にあるなら単純に切り出せるけど、メソッドの真ん中にあったらどうするのと
 
+これにより、インフラストラクチャコード（例：コレクションを反復するコードや外部サービスに接続するコードなど）を隠して、ビジネスロジックを目立たせることができる
+
 ```ruby
 def charge(amount, credit_card_number) # ここで引数を２つ受け取っている
   begin
@@ -788,6 +814,8 @@ end
 
 ```ruby
 def charge(amount, credit_card_number)
+  # connect メソッド内のyield にブロックを渡す
+  # yield からのconnection を受け取る
   connect do |connection|
     connection.send(amount, credit_card_number)
   end
@@ -795,7 +823,8 @@ end
 
 def connect
   begin
-    connection = CreditCardServer.connect(...)
+    connection = CreditCardServer.connect("something...")
+    # 与えられたブロックに対し、connection を渡して実行
     yield connection
   rescue IOError => e
     Logger.log "Could not submit order #{@order_number} to the server: #{e}"
@@ -810,8 +839,8 @@ end
 
 家系図のモデルを作る
 
-- number_of_living_descendants 生きている子供が何人いるかを数え上げる
-- number_of_descendants_named(name) その名前の子供を数え上げる
+- `number_of_living_descendants` 生きている子供が何人いるかを数え上げる
+- `number_of_descendants_named(name)` その名前の子供を数え上げる
 
 重複しているのは、インクリメントするかどうかを判別する部分である
 
@@ -849,7 +878,7 @@ class Person
 end
 ```
 
-まず数え上げる部分を別メソッド (count_descendants_matching(name)) へ切り出す
+まず数え上げる部分を別メソッド (`count_descendants_matching(name)`) へ切り出す
 
 ```ruby
   def number_of_descendants_named(name)
@@ -882,6 +911,8 @@ end
 ```
 
 ## Introduce Class Annotation
+
+宣言的な構文でコードの目的が明確につかめる場合に適用すると、コードの意図を明確にできる
 
 Class Annotation を使用する
 例えば次のようなイニシャライザに対して・・・
@@ -921,6 +952,8 @@ end
 けどこれどうなんだろうなあ・・・
 
 #### module に切り出す
+
+```ruby
 module CustomInitializers
   def hash_initializer(*attribute_names)
     define_method(:initialize) do |*args|
@@ -931,17 +964,21 @@ module CustomInitializers
     end
   end
 end
+```
+
+```ruby
 # ここで全てのクラスに CustomInitializers をインクルード
 Class.send(:include, CustomInitializers)
 # ここでは Class annotation を宣言するだけで良い
 class SearchCriteria
-
+  # ...
   hash_initializer :author_id, :publisher_id, :isbn
 end
+```
 
 ## Introduce Named Parameter
 
-まあこれは引数はハッシュで渡せ、的な
+まあこれは引数はハッシュで渡せ、的な  
 先ほどの Introduce Class annotation のカスタムイニシャライザを使うと便利
 
 ### Example 2: Naming Only the Optional Parameters
@@ -1071,7 +1108,7 @@ Books.find(:first,
 
 ## Remove Unused Default Parameter
 
-そのメソッドが必ず引数を必要とするならば、デフォルト値は不要
+引数がデフォルト値を持っていて、メソッドが必ずその引数を必要とするならば、デフォルト値は不要
 
 ```ruby
 def product_count_items(search_criteria=nil)
@@ -1112,6 +1149,36 @@ end
 
 わざわざ ``def_each`` というメソッドを定義するらしい・・・
 
+### Example: Using def_each to Define Similar Methods
+
+似たようなメソッドがこのように並んでいる
+
+```ruby
+def failure
+  self.state = :failure
+end
+
+def error
+  self.state = :error
+end
+
+def success
+  self.state = :success
+end
+```
+
+まずはこのようにして重複をなくす
+
+```ruby
+[:failure, :error, :success].each do |method|
+  define_method method do
+    self.state = method
+  end
+end
+```
+
+そこから以下のように動的定義を導入する
+
 ```ruby
 class Class
   def def_each(*method_names, &block)
@@ -1124,7 +1191,7 @@ class Class
 end
 ```
 
-``instance_exec`` 渡されたブロックをレシーバのインスタンの元で実行する。ブロックの戻り値がメソッドの戻り値になる
+``instance_exec`` 渡されたブロックをレシーバのインスタンスの元で実行する。ブロックの戻り値がメソッドの戻り値になる
 インスタンスメソッド内でコードを実行するときと同じことができる
 
 ```ruby
@@ -1135,16 +1202,6 @@ end
 ```
 
 https://ref.xaio.jp/ruby/classes/object/instance_exec
-
-普通にこうやってもいんじゃね
-
-```ruby
-[:failure, :error, :success].each do |method|
-  define_method method do
-    self.state = method
-  end
-end
-```
 
 ### Example: Defining Instance Methods with a Class Annotation
 
@@ -1253,6 +1310,8 @@ end
 
 存在しないメソッドを呼んだとき、``NoMethodError`` が起こるが、メソッドを呼ぶのは ``Decorator`` であるにもかかわらず、エラーが起こるのは ``subject`` である
 
+`Decorator` で`NoMethodError` が起こるようにする
+
 ```ruby
 class Decorator
   def initialize(subject)
@@ -1275,6 +1334,8 @@ https://ref.xaio.jp/ruby/classes/object/public_methods
 https://docs.ruby-lang.org/ja/latest/method/Module/i/class_eval.html
 
 ### Example: Using User-Defined Data to Define Methods
+
+```ruby
 class Person
   attr_accessor :name, :age
   def method_missing(sym, *args, &block)
@@ -1285,6 +1346,7 @@ class Person
     self.send(sym).nil?
   end
 end
+```
 
 これも先ほどと同じ問題がある
 
@@ -1358,8 +1420,8 @@ recorder.stop("LRMMMMRL")
 recorder.play_for(CommandCenter.new)
 ```
 
-どこか不具合が出た時に特定しづらい
-未定義のメッセージを集めておく機能をRecorderから MessageCollecter へと切り出す
+どこか不具合が出た時に特定しづらい  
+未定義のメッセージを集めておく機能を`Recorder`から `MessageCollecter` へと切り出す
 
 ```ruby
 class MessageCollecter
@@ -1378,7 +1440,7 @@ class MessageCollecter
 end
 ```
 
-Recorder ではrecord メソッド内でMessagesCollector を初期化しておく
+Recorder ではrecord メソッド内でMessagesCollector を初期化しておく  
 message_collector のmessages を利用する
 
 ```ruby
@@ -1411,7 +1473,10 @@ recorder.play_for(CommandCenter.new)
 
 ## Move Eval from Runtime to Parse Time
 
-eval の使用をメソッド定義の内側から定義する箇所そのものへと移動する
+eval を実行時からパース時へ  
+eval の使用をメソッド定義の内側から定義する箇所そのものへと移動する  
+
+eval の実行回数を減らすことができる
 
 ```ruby
 class Person
@@ -1427,6 +1492,7 @@ class Person
 end
 ```
 
+-----
 
 ```ruby
 class Person
