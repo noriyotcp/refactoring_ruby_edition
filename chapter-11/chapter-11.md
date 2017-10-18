@@ -1039,7 +1039,7 @@ class Employee
   end
 
   def to_s
-   "Emp: #{last_name}"
+   "Emp: #{last_name}" # ここ
   end
 end
 ```

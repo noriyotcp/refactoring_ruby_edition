@@ -42,7 +42,7 @@ class Movie
   CHILDRENS = 2
 
   attr_reader :title
-  attr_writer :price_code
+  attr_writer :price
 
   def initialize(title, price_code)
     @title, @price = title, price_code
@@ -60,10 +60,10 @@ end
 p movie = Movie.new("The Watchmen", NewReleasePrice.new)
 p movie.charge(2)
 p movie.frequent_renter_points(2)
-p movie.price_code = RegularPrice.new
+p movie.price = RegularPrice.new
 p movie.charge(2)
 p movie.frequent_renter_points(2)
-p movie.price_code = ChildrensPrice.new
+p movie.price = ChildrensPrice.new
 p movie.charge(2)
 p movie.frequent_renter_points(2)
 # #<Movie:0x007fc55994ce08 @title="The Watchmen", @price=#<NewReleasePrice:0x007fc55994ce58>>

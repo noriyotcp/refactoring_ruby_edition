@@ -237,8 +237,8 @@ end
 
 ### At Last...Inheritance
 
-とうとう継承を使うのだが、Replace Type Code with State/Strategy とか言ってるな
-Self Encapsulate Field セッターメソッドを作る
+とうとう継承を使うのだが、Replace Type Code with State/Strategy を使用する  
+Self Encapsulate Field セッターメソッドを作成し、ゲッターとセッターを使用する
 
 ```ruby
 class Movie
@@ -387,16 +387,20 @@ end
 Movie でdelegator を作成
 
 ```ruby
-# ...
+class Movie
+  # ...
   def frequent_renter_points(days_rented)
     @price.frequent_renter_points(days_rented)
   end
+end
 ```
 
-price_code による判別を ``price_code`` というセッターの中で 行い、``@price`` というインスタンスを作成しておけば、あとはそこにメッセージを送るだけで良い
+price_code による判別を ``price_code`` というセッターの中で行い、``@price`` というインスタンスを作成しておけば、あとはそこにメッセージを送るだけで良い
 
 
 ```ruby
+class Movie
+  # ...
   def price_code=(value)
     @price_code = value
     @price = case price_code
@@ -408,10 +412,8 @@ price_code による判別を ``price_code`` というセッターの中で 行�
         ChildrensPrice.new
     end
   end
-
-  def initialize(title, the_price_code)
-    @title, self.price_code = title, the_price_code
-  end
+  # ...
+end
 ```
 
 -----
@@ -425,7 +427,7 @@ movie = Movie.new("The Watchmen", Movie::NEW_REALEASE)
 movie.price_code = Movie::REGULAR
 ```
 
-``price_code`` をセッターとして用意する。そして ``price_code=(value)`` を削除（条件分岐とともに）
+``price`` をアクセサとして用意する。そして ``price_code=(value)`` を削除（条件分岐とともに）
 
 ```ruby
 class Movie
@@ -434,7 +436,7 @@ class Movie
   CHILDRENS = 2
 
   attr_reader :title
-  attr_writer :price_code
+  attr_writer :price
 
   # 初期化する際はインスタンスを渡すので price_code という名前だが...
   def initialize(title, price_code)
@@ -456,10 +458,10 @@ end
 p movie = Movie.new("The Watchmen", NewReleasePrice.new)
 p movie.charge(2)
 p movie.frequent_renter_points(2)
-p movie.price_code = RegularPrice.new
+p movie.price = RegularPrice.new
 p movie.charge(2)
 p movie.frequent_renter_points(2)
-p movie.price_code = ChildrensPrice.new
+p movie.price = ChildrensPrice.new
 p movie.charge(2)
 p movie.frequent_renter_points(2)
 # #<Movie:0x007fc55994ce08 @title="The Watchmen", @price=#<NewReleasePrice:0x007fc55994ce58>>

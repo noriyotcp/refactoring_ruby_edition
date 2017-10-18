@@ -72,7 +72,7 @@ class Account
 end
 ```
 
-``@interest_rate`` をAccountType へ移す
+``@interest_rate`` を`AccountType` へ移す
 
 ```ruby
 class AccountType
@@ -94,6 +94,21 @@ end
 ```ruby
 class Account
   # ...
+  attr_accessor :interest_rate
+
+  def interest_for_amount_days(amount, days)
+    interest_rate * amount * days / 365
+  end
+end
+```
+
+-----
+
+`interest_rate` をメソッドへ切り出す
+
+```ruby
+class Account
+  # ...
   def interest_for_amount_days(amount, days)
     interest_rate * amount * days / 365
   end
@@ -105,6 +120,8 @@ end
 ```
 
 #### extend Forwardable
+
+Forwardable を用いる方法もある
 
 ```ruby
 class Account
@@ -212,8 +229,8 @@ end
 
 -----
 
-あくまで TelephoneNumber はarea_code, number を持ったまま
-Person 側でそれらの属性へのゲッタとセッタを用意する
+あくまで `TelephoneNumber` は`area_code`, `number` を持ったまま
+`Person` 側でそれらの属性へのゲッタとセッタを用意する
 
 ```ruby
 class Person
@@ -288,17 +305,12 @@ class Person
   end
 end
 
-# extend Forwardable
+# extend Forwardable を使用した場合
 class Person
   extend Forwardable
-
   def_delegator :@department, :manager
 
   attr_accessor :department
-
-  def manager
-    @department.manager
-  end
 end
 
 manager = john.manager
